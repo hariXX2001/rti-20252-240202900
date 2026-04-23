@@ -67,52 +67,51 @@ Masalah riset yang layak harus memenuhi 5 kriteria:
 PROBLEM STATEMENT BUILDER
 
 Domain & Konteks
-  Domain   : ____________________
-  Konteks  : ____________________
+  Domain   : Computer Vision / Deep Learning
+  Konteks  : Sistem deteksi kondisi dan nominal uang kertas berbasis citra digital untuk layanan keuangan
 
 System Context
-  Input       : ____________________
-  Process     : ____________________
-  Output      : ____________________
-  Outcome     : ____________________
-  Constraints : ____________________
-  Stakeholders: ____________________
+  Input       : Citra uang kertas dari kamera (smartphone/webcam)
+  Process     : Preprocessing → Feature extraction → Klasifikasi menggunakan CNN/Hybrid CNN-Attention
+  Output      : Label kondisi (bagus/rusak) + nominal uang
+  Outcome     : Meningkatkan akurasi dan efisiensi deteksi uang secara otomatis
+  Constraints : Dataset terbatas, variasi pencahayaan, keterbatasan perangkat (mobile)
+  Stakeholders: Bank Indonesia, lembaga keuangan, masyarakat umum
 
 Fenomena → Problem
-  Fenomena yang diamati             : ____________________
-  Gejala (symptom) yang terukur     : ____________________
-  Masalah yang didiagnosis          : ____________________
-  Masalah riset (researchable)      : ____________________
-  Variabel yang terukur             : ____________________
+  Fenomena yang diamati             : Identifikasi kondisi uang masih dilakukan secara manual dan bergantung pada manusia
+  Gejala (symptom) yang terukur     : Proses lambat, subjektif, dan rawan kesalahan (human error)
+  Masalah yang didiagnosis          : Model otomatis yang ada masih terbatas (hanya klasifikasi biner dan kurang robust)
+  Masalah riset (researchable)      : Belum ada model yang mampu mengklasifikasikan kondisi dan nominal uang secara akurat dengan generalisasi tinggi pada berbagai kondisi lingkungan
+  Variabel yang terukur             : Akurasi, precision, recall, F1-score, waktu inferensi, robustness terhadap noise & pencahayaan
+
 
 Problem Quality Check
-  [ ] Clarity — Apakah satu orang membaca akan paham?
-  [ ] Measurability — Apakah ada metrik kuantitatif?
-  [ ] Relevance — Apakah penting untuk domain?
-  [ ] Testability — Apakah bisa gagal?
-  [ ] Impact — Apakah ada kontribusi jika terjawab?
+  [✓] Clarity — Apakah satu orang membaca akan paham?
+  [✓] Measurability — Apakah ada metrik kuantitatif?
+  [✓] Relevance — Apakah penting untuk domain?
+  [✓] Testability — Apakah bisa gagal?
+  [✓] Impact — Apakah ada kontribusi jika terjawab?
 
 Problem Statement (1 paragraf):
-  ____________________
+  Proses identifikasi kondisi uang kertas saat ini masih dilakukan secara manual sehingga tidak efisien dan rentan terhadap kesalahan manusia. Penelitian sebelumnya telah menunjukkan bahwa metode Convolutional Neural Network (CNN) mampu mengklasifikasikan kondisi uang dengan akurasi yang tinggi, namun masih terbatas pada klasifikasi biner (uang bagus dan rusak) serta belum mampu mengidentifikasi nominal uang secara bersamaan. Selain itu, keterbatasan dataset dan kurangnya pengujian pada kondisi lingkungan yang bervariasi menyebabkan model memiliki kemampuan generalisasi yang rendah. Oleh karena itu, diperlukan pengembangan model yang lebih komprehensif dengan mengintegrasikan klasifikasi kondisi dan nominal uang, serta meningkatkan robustness model melalui pendekatan arsitektur yang lebih modern dan evaluasi yang lebih menyeluruh agar sistem dapat digunakan secara efektif dalam kondisi nyata.
 ```
 
 ---
 
 ## Latihan 1 — Dari Topik ke Masalah Riset
 
-Pilih satu topik di bidang TI yang diminati. Transformasikan melalui 5 tahap Problem Formation Model.
-
-**Topik awal:** ________________________________________
+**Topik awal:** Deteksi uang kertas menggunakan CNN
 
 | Tahap | Hasil |
 |-------|-------|
-| Reality | *Contoh: Aplikasi e-commerce sering ditinggalkan saat checkout* |
-| Observed Issue (Symptom) | *Contoh: Bounce rate checkout 68%* |
-| Diagnosed Problem (Root Cause) | |
-| Researchable Problem | |
-| Measurable Variable | |
+| Reality | Identifikasi uang masih dilakukan secara manual |
+| Observed Issue (Symptom) | Proses lambat dan sering terjadi kesalahan |
+| Diagnosed Problem (Root Cause) | Tidak adanya sistem otomatis yang akurat dan robust |
+| Researchable Problem | Model CNN belum mampu mengklasifikasikan kondisi + nominal uang secara optimal |
+| Measurable Variable | Akurasi, precision, recall, F1-score, waktu inferensi |
 
-**Apakah terjebak solution-first thinking?** [ ] Ya / [ ] Tidak
+**Apakah terjebak solution-first thinking?** [ ] Ya / [✓] Tidak
 > Jika ya, kembali ke tahap mana? ________________________
 
 ---
@@ -123,14 +122,14 @@ Gambarkan konteks sistem dari masalah riset di Latihan 1.
 
 | Komponen | Deskripsi |
 |----------|----------|
-| Input | *Contoh: Request HTTP dari browser pengguna* |
-| Process | |
-| Output | |
-| Outcome | |
-| Constraints | |
-| Stakeholders | |
+| Input | Gambar uang dari kamera |
+| Process | Preprocessing + CNN / Hybrid CNN-Attention |
+| Output | Klasifikasi kondisi dan nominal uang |
+| Outcome | Efisiensi meningkat, mengurangi human error |
+| Constraints | Dataset terbatas, variasi lingkungan |
+| Stakeholders | Bank, masyarakat, peneliti |
 
-**Komponen mana yang paling relevan dengan masalah riset?** _______________
+**Komponen mana yang paling relevan dengan masalah riset?** Process (model dan metode klasifikasi)
 
 ---
 
@@ -140,17 +139,16 @@ Evaluasi problem statement yang sudah dibuat menggunakan 5 kriteria.
 
 | Kriteria | Skor (1-5) | Justifikasi |
 |----------|-----------|-------------|
-| Clarity | *Contoh: 4 — cukup jelas tapi perlu spesifikasi dataset* | |
-| Measurability | | |
-| Relevance | | |
-| Testability | | |
-| Impact | | |
+| Clarity | 5 | Masalah jelas dan spesifik |
+| Measurability | 5 | Menggunakan metrik kuantitatif |
+| Relevance | 5 | Penting untuk sektor keuangan dan AI |
+| Testability | 5 | Bisa diuji melalui eksperimen |
+| Impact | 5 | Berpotensi diterapkan di dunia nyata |
 
-**Skor total:** _____ / 25
+**Skor total:** 25 / 25
 
 **Problem statement versi final (1 paragraf):**
-> ___________________________________________________
-> ___________________________________________________
+> Proses identifikasi kondisi dan nominal uang kertas masih dilakukan secara manual sehingga tidak efisien dan rentan terhadap kesalahan manusia. Penelitian sebelumnya telah menggunakan CNN untuk klasifikasi citra, namun umumnya hanya terbatas pada deteksi kondisi uang tanpa integrasi identifikasi nominal serta memiliki keterbatasan dalam generalisasi akibat dataset yang terbatas. Oleh karena itu, diperlukan pengembangan model berbasis deep learning yang mampu mengklasifikasikan kondisi dan nominal uang secara simultan dengan performa yang terukur menggunakan akurasi, precision, recall, dan F1-score, serta memiliki ketahanan terhadap variasi kondisi lingkungan agar dapat digunakan secara efektif dalam aplikasi nyata.
 
 ---
 
@@ -159,5 +157,4 @@ Evaluasi problem statement yang sudah dibuat menggunakan 5 kriteria.
 > Bandingkan "masalah" yang biasa ditemui saat coding (bug, error) dengan masalah riset. Apa perbedaan fundamental dalam cara mendefinisikan dan mendekati keduanya?
 
 **Jawaban:**
-> ___________________________________________________
-> ___________________________________________________
+> Masalah dalam coding biasanya berupa error atau bug yang harus segera diperbaiki agar sistem dapat berjalan dengan benar. Fokusnya adalah menemukan solusi praktis secepat mungkin. Sedangkan masalah riset berfokus pada kesenjangan pengetahuan yang harus dianalisis dan dibuktikan secara ilmiah. Dalam riset, masalah harus dirumuskan secara jelas, terukur, dan dapat diuji, serta tidak selalu harus “diselesaikan” tetapi harus dipahami dan divalidasi melalui metode yang sistematis.
