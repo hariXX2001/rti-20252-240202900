@@ -68,36 +68,47 @@ PROBLEM STATEMENT BUILDER
 
 Domain & Konteks
   Domain   : Computer Vision / Deep Learning
-  Konteks  : Sistem deteksi kondisi dan nominal uang kertas berbasis citra digital untuk layanan keuangan
+  Konteks  : Sistem deteksi kondisi uang kertas berbasis citra digital untuk mendukung layanan keuangan
 
 System Context
   Input       : Citra uang kertas dari kamera (smartphone/webcam)
-  Process     : Preprocessing → Feature extraction → Klasifikasi menggunakan CNN/Hybrid CNN-Attention
-  Output      : Label kondisi (bagus/rusak) + nominal uang
+  Process     : Preprocessing → Feature extraction → Klasifikasi menggunakan CNN / CNN + Attention
+  Output      : Label kondisi (bagus/rusak)
   Outcome     : Meningkatkan akurasi dan efisiensi deteksi uang secara otomatis
-  Constraints : Dataset terbatas, variasi pencahayaan, keterbatasan perangkat (mobile)
-  Stakeholders: Bank Indonesia, lembaga keuangan, masyarakat umum
+  Constraints : Dataset terbatas (hanya 500 gambar), variasi pencahayaan terbatas, 
+                sudut pengambilan gambar seragam (kondisi ideal)
+  Stakeholders: Bank Indonesia, lembaga keuangan, masyarakat, peneliti
 
 Fenomena → Problem
-  Fenomena yang diamati             : Identifikasi kondisi uang masih dilakukan secara manual dan bergantung pada manusia
-  Gejala (symptom) yang terukur     : Proses lambat, subjektif, dan rawan kesalahan (human error)
-  Masalah yang didiagnosis          : Model otomatis yang ada masih terbatas (hanya klasifikasi biner dan kurang robust)
-  Masalah riset (researchable)      : Belum ada model yang mampu mengklasifikasikan kondisi dan nominal uang secara akurat dengan generalisasi tinggi pada berbagai kondisi lingkungan
-  Variabel yang terukur             : Akurasi, precision, recall, F1-score, waktu inferensi, robustness terhadap noise & pencahayaan
+  Fenomena yang diamati             : Identifikasi kondisi uang kertas masih dilakukan 
+                                      secara manual di lapangan (layanan kas keliling Bank Indonesia).
+  Gejala (symptom) yang terukur     : Proses lambat, subjektif, dan rentan human error.
+  Masalah yang didiagnosis          : Model CNN yang dikembangkan Nandika (2025) mencapai akurasi 
+                                      93%, namun: (a) menggunakan dataset kecil (500 gambar) 
+                                      dengan kondisi ideal, (b) tidak ada uji robustness terhadap 
+                                      variasi pencahayaan, (c) tidak ada evaluasi interpretabilitas.
+  Masalah riset (researchable)      : Belum ada evaluasi eksperimental yang secara kuantitatif 
+                                      mengukur sejauh mana variasi kondisi lingkungan (pencahayaan, 
+                                      sudut, dan noise) mempengaruhi performa model CNN, serta 
+                                      apakah model benar-benar memfokuskan pada fitur kerusakan 
+                                      yang relevan berdasarkan analisis interpretabilitas.
+  Variabel yang terukur             : Akurasi, precision, recall, F1-score, serta:
+                                      (1) perubahan akurasi pada variasi pencahayaan (terang, redup, gelap).
+                                      (2) perubahan akurasi pada variasi sudut (0°, 45°, 90°).
+                                      (3) perubahan akurasi pada noise (Gaussian/blur).
+                                      (4) analisis fokus fitur menggunakan Grad-CAM.
 
 
 Problem Quality Check
-  [✓] Clarity — Apakah satu orang membaca akan paham?
-  [✓] Measurability — Apakah ada metrik kuantitatif?
-  [✓] Relevance — Apakah penting untuk domain?
-  [✓] Testability — Apakah bisa gagal?
-  [✓] Impact — Apakah ada kontribusi jika terjawab?
+  [✓] Clarity — Masalah jelas dan spesifik (dataset kecil, kondisi ideal, tidak ada interpretabilitas)
+  [✓] Measurability — Menggunakan metrik kuantitatif + evaluasi interpretabilitas
+  [✓] Relevance — PPenting untuk domain computer vision dan sektor keuangan (kas keliling BI)
+  [✓] Testability — Bisa diuji melalui eksperimen dengan variasi kondisi lingkungan
+  [✓] Impact — Berpotensi meningkatkan validitas dan keandalan model di dunia nyata
 
 Problem Statement (1 paragraf):
-  Proses identifikasi kondisi uang kertas saat ini masih dilakukan secara manual sehingga tidak efisien dan rentan terhadap kesalahan manusia. Penelitian sebelumnya telah menunjukkan bahwa metode Convolutional Neural Network (CNN) mampu mengklasifikasikan kondisi uang dengan akurasi yang tinggi, namun masih terbatas pada klasifikasi biner (uang bagus dan rusak) serta belum mampu mengidentifikasi nominal uang secara bersamaan. Selain itu, keterbatasan dataset dan kurangnya pengujian pada kondisi lingkungan yang bervariasi menyebabkan model memiliki kemampuan generalisasi yang rendah. Oleh karena itu, diperlukan pengembangan model yang lebih komprehensif dengan mengintegrasikan klasifikasi kondisi dan nominal uang, serta meningkatkan robustness model melalui pendekatan arsitektur yang lebih modern dan evaluasi yang lebih menyeluruh agar sistem dapat digunakan secara efektif dalam kondisi nyata.
+   Proses identifikasi kondisi uang kertas di layanan kas keliling Bank Indonesia saat ini masih dilakukan secara manual sehingga tidak efisien dan rentan terhadap kesalahan manusia. Penelitian Nandika (2025) telah mengembangkan model CNN untuk klasifikasi kondisi uang dengan akurasi 93%, namun model tersebut dilatih pada dataset terbatas (500 gambar) dengan kondisi pengambilan yang ideal sehingga kemampuan generalisasinya terhadap kondisi dunia nyata belum teruji. Selain itu, penelitian tersebut belum mengevaluasi aspek interpretabilitas model, sehingga tidak diketahui apakah model benar-benar memfokuskan pada fitur kerusakan yang relevan seperti sobekan atau noda, atau justru pada artefak latar belakang yang tidak relevan. Oleh karena itu, diperlukan evaluasi eksperimental yang mengukur pengaruh variasi kondisi lingkungan terhadap performa model CNN serta analisis interpretabilitas menggunakan Grad-CAM guna memastikan validitas dan keandalan model dalam kondisi operasional nyata.
 ```
-
----
 
 ## Latihan 1 — Dari Topik ke Masalah Riset
 
@@ -105,15 +116,14 @@ Problem Statement (1 paragraf):
 
 | Tahap | Hasil |
 |-------|-------|
-| Reality | Identifikasi uang masih dilakukan secara manual |
-| Observed Issue (Symptom) | Proses lambat dan sering terjadi kesalahan |
-| Diagnosed Problem (Root Cause) | Tidak adanya sistem otomatis yang akurat dan robust |
-| Researchable Problem | Model CNN belum mampu mengklasifikasikan kondisi + nominal uang secara optimal |
-| Measurable Variable | Akurasi, precision, recall, F1-score, waktu inferensi |
+| Reality | Identifikasi uang di layanan kas keliling BI masih manual |
+| Observed Issue (Symptom) | Proses lambat, subjektif, dan rentan human error |
+| Diagnosed Problem (Root Cause) | Model CNN memiliki akurasi tinggi namun belum diuji pada variasi kondisi lingkungan dan tidak memiliki evaluasi interpretabilitas
+| Researchable Problem | Belum ada evaluasi eksperimental terhadap pengaruh variasi lingkungan terhadap performa CNN serta analisis interpretabilitas fokus model |
+| Measurable Variable | Akurasi, precision, recall, F1-score, perubahan akurasi pada variasi kondisi, dan Grad-CAM |
 
 **Apakah terjebak solution-first thinking?** [ ] Ya / [✓] Tidak
 > Jika ya, kembali ke tahap mana? ________________________
-
 ---
 
 ## Latihan 2 — System Context Decomposition
@@ -122,15 +132,16 @@ Gambarkan konteks sistem dari masalah riset di Latihan 1.
 
 | Komponen | Deskripsi |
 |----------|----------|
-| Input | Gambar uang dari kamera |
-| Process | Preprocessing + CNN / Hybrid CNN-Attention |
-| Output | Klasifikasi kondisi dan nominal uang |
+| Input | Gambar uang dari kamera smartphone |
+| Process | Preprocessing → CNN classification |
+| Output | Klasifikasi kondisi (bagus/rusak) |
 | Outcome | Efisiensi meningkat, mengurangi human error |
-| Constraints | Dataset terbatas, variasi lingkungan |
-| Stakeholders | Bank, masyarakat, peneliti |
+| Constraints | Dataset kecil, kondisi ideal |
+| Stakeholders | Bank Indonesia, lembaga keuangan, masyarakat, peneliti |
 
-**Komponen mana yang paling relevan dengan masalah riset?** Process (model dan metode klasifikasi)
+**Komponen mana yang paling relevan dengan masalah riset?** Process (model CNN dan keterbatasannya)
 
+Constraints (dataset kecil, kondisi ideal)
 ---
 
 ## Latihan 3 — Problem Quality Check
@@ -139,17 +150,16 @@ Evaluasi problem statement yang sudah dibuat menggunakan 5 kriteria.
 
 | Kriteria | Skor (1-5) | Justifikasi |
 |----------|-----------|-------------|
-| Clarity | 5 | Masalah jelas dan spesifik |
-| Measurability | 5 | Menggunakan metrik kuantitatif |
-| Relevance | 5 | Penting untuk sektor keuangan dan AI |
+| Clarity | 5 | Masalah spesifik dan berbasis evidence |
+| Measurability | 5 | Variabel jelas dan operasional |
+| Relevance | 5 | Relevan untuk AI dan sektor keuangan |
 | Testability | 5 | Bisa diuji melalui eksperimen |
-| Impact | 5 | Berpotensi diterapkan di dunia nyata |
+| Impact | 5 | Meningkatkan keandalan model di kondisi nyata |
 
 **Skor total:** 25 / 25
 
 **Problem statement versi final (1 paragraf):**
-> Proses identifikasi kondisi dan nominal uang kertas masih dilakukan secara manual sehingga tidak efisien dan rentan terhadap kesalahan manusia. Penelitian sebelumnya telah menggunakan CNN untuk klasifikasi citra, namun umumnya hanya terbatas pada deteksi kondisi uang tanpa integrasi identifikasi nominal serta memiliki keterbatasan dalam generalisasi akibat dataset yang terbatas. Oleh karena itu, diperlukan pengembangan model berbasis deep learning yang mampu mengklasifikasikan kondisi dan nominal uang secara simultan dengan performa yang terukur menggunakan akurasi, precision, recall, dan F1-score, serta memiliki ketahanan terhadap variasi kondisi lingkungan agar dapat digunakan secara efektif dalam aplikasi nyata.
-
+> Proses identifikasi kondisi uang kertas di layanan kas keliling Bank Indonesia saat ini masih dilakukan secara manual sehingga tidak efisien dan rentan terhadap kesalahan manusia. Penelitian Nandika (2025) telah mengembangkan model CNN dengan akurasi 93%, namun masih memiliki keterbatasan dalam hal generalisasi karena dilatih pada dataset terbatas dengan kondisi ideal serta belum dievaluasi dari sisi interpretabilitas. Oleh karena itu, penelitian ini berfokus pada evaluasi eksperimental terhadap pengaruh variasi kondisi lingkungan terhadap performa model CNN serta analisis interpretabilitas menggunakan Grad-CAM untuk memastikan validitas dan keandalan model dalam kondisi operasional nyata.
 ---
 
 ## Refleksi
@@ -157,4 +167,4 @@ Evaluasi problem statement yang sudah dibuat menggunakan 5 kriteria.
 > Bandingkan "masalah" yang biasa ditemui saat coding (bug, error) dengan masalah riset. Apa perbedaan fundamental dalam cara mendefinisikan dan mendekati keduanya?
 
 **Jawaban:**
-> Masalah dalam coding biasanya berupa error atau bug yang harus segera diperbaiki agar sistem dapat berjalan dengan benar. Fokusnya adalah menemukan solusi praktis secepat mungkin. Sedangkan masalah riset berfokus pada kesenjangan pengetahuan yang harus dianalisis dan dibuktikan secara ilmiah. Dalam riset, masalah harus dirumuskan secara jelas, terukur, dan dapat diuji, serta tidak selalu harus “diselesaikan” tetapi harus dipahami dan divalidasi melalui metode yang sistematis.
+> Masalah dalam coding biasanya berupa error atau bug yang harus segera diperbaiki agar sistem dapat berjalan dengan benar. Fokusnya adalah menemukan solusi praktis secepat mungkin. Sedangkan masalah riset berfokus pada kesenjangan pengetahuan yang harus dianalisis dan dibuktikan secara ilmiah. Dalam riset, masalah harus dirumuskan secara jelas, terukur, dan dapat diuji, serta tidak selalu harus "diselesaikan" tetapi harus dipahami dan divalidasi melalui metode yang sistematis.
