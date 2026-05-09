@@ -66,19 +66,24 @@ Metrik harus ditentukan **sebelum** eksperimen. Memilih metrik setelah melihat d
 ```
 VARIABLE & METRIC DEFINITION
 
-Research Question: ____________________
+Research Question: Seberapa baik MobileNetV2 dibandingkan dengan baseline CNN 2-Layer dalam mengklasifikasikan tingkat kerusakan uang Rupiah (ringan, sedang, berat) berdasarkan Accuracy dan Macro F1-Score pada dataset 1.000 citra berlabel ahli BI?
 
 | Variabel | Tipe | Konsep | Metrik | Skala | Satuan | Cara Mengukur | Justifikasi |
 |----------|------|--------|--------|-------|--------|---------------|-------------|
-|          | IV   |        |        |       |        |               |             |
-|          | DV   |        |        |       |        |               |             |
-|          | CV   |        |        |       |        |               |             |
+|    Arsitektur Model      | IV   |    Kemampuan representasi fitur citra    |    MobileNetV2 vs CNN 2-Layer    |   Nominal    |     -  |       Implementasi dan training model        |       Variabel utama perbandingan sesuai RQ      |
+|     Performa Klasifikasi     | DV   |    Kemampuan membedakan 3 tingkat kerusakan    |     Macro F1-Score (Primary)
+Matthews Correlation Coefficient (MCC) (Secondary)
+Balanced Accuracy   |   Ratio    |     - / %   |        Perhitungan dari Confusion Matrix       |       Macro F1-Score dipilih karena imbalance antar kelas. MCC sebagai secondary karena sangat robust pada data tidak seimbang      |
+|     Akurasi Keseluruhan     | CV   |   Performa global model    |    Accuracy    |    Ratio   |    %   |         Perhitungan dari Confusion Matrix      |       Secondary metric untuk interpretasi mudah      |
+|  Performa per Kelas  |  DV  |  Kemampuan model pada masing-masing kelas  |  Precision, Recall, F1-Score per kelas  |  Ratio  |  %  |  Classification Report  |  Penting untuk menganalisis kelas minoritas (kerusakan ringan)  |
+|  Jumlah Data per Kelas  |  CV  |  Keseimbangan dataset  |  Jumlah citra per kelas  |  Ratio  |  Gambar  |  Dokumentasi dataset  |  Mengontrol bias imbalance  |
+|  Variasi Citra  |  CV  |  Realisme kondisi lapangan  |  Tingkat augmentasi (brightness, rotation, noise)  |  Ordinal  |  -  |  Parameter augmentasi  |  Mengontrol faktor eksternal  |
 
 Alignment Check:
   RQ → Concept → Variable → Metric → Data → Result
-  [ ] Setiap langkah terdokumentasi
-  [ ] Tidak ada "lompatan logis"
-  [ ] Metrik mengukur apa yang dimaksud (construct validity)
+  [ V ] Setiap langkah terdokumentasi
+  [ v ] Tidak ada "lompatan logis"
+  [ v ] Metrik mengukur apa yang dimaksud (construct validity)
 ```
 
 ---
@@ -87,15 +92,15 @@ Alignment Check:
 
 Gunakan RQ dari WS-04. Definisikan variabel dan metriknya.
 
-**RQ:** __________________________________________________
+**RQ:**Seberapa baik MobileNetV2 dibandingkan dengan baseline CNN 2-Layer dalam mengklasifikasikan tingkat kerusakan uang Rupiah (ringan, sedang, berat) berdasarkan Accuracy dan Macro F1-Score pada dataset 1.000 citra berlabel ahli BI?
 
 | Variabel | Tipe | Konsep Abstrak | Metrik Konkret | Skala (NOIR) | Satuan |
 |----------|------|---------------|----------------|-------------|--------|
-| *Contoh: Jenis model* | *IV* | *Pendekatan klasifikasi* | *Categorical: CNN vs RF* | *Nominal* | *—* |
-| | DV | | | | |
-| | CV | | | | |
+| Arsitektur Model | IV | Pendekatan ekstraksi fitur citra | MobileNetV2 vs CNN 2-Layer | Nominal | - |
+| Performa Klasifikasi | DV | Keberhasilan deteksi tingkat kerusakan | Macro F1-Score, MCC, Balanced Accuracy | Ratio | - / % |
+| Variasi Citra | CV | Kondisi gambar dunia nyata | Tingkat augmentasi & pencahayaan | Ordinal | - |
 
-**Apakah ada lompatan logis dalam rantai?** [ ] Ya / [ ] Tidak
+**Apakah ada lompatan logis dalam rantai?** [ ] Ya / [ x ] Tidak
 > Jika ya, di mana? ____________________________________
 
 ---
@@ -106,15 +111,17 @@ Evaluasi metrik DV yang dipilih di Latihan 1 menggunakan 3 kriteria.
 
 | Kriteria | Skor (1-5) | Justifikasi |
 |----------|-----------|-------------|
-| Representative | *Contoh: 4 — F1-Score mewakili keseimbangan precision-recall* | |
-| Sensitive | | |
-| Feasible | | |
+| Representative | 5 | Memberikan bobot yang sama untuk setiap kelas (ringan, sedang, berat) |
+| Sensitive | 4 | Sensitif terhadap performa kelas minoritas |
+| Feasible | 5 | Mudah dihitung dengan library scikit-learn |
 
-**Apakah perlu secondary metric?** [ ] Ya / [ ] Tidak
-> Jika ya, apa dan mengapa? _____________________________
+**Apakah perlu secondary metric?** [ X ] Ya / [ ] Tidak
+> Jika ya, apa dan mengapa?Ya, Matthews Correlation Coefficient (MCC) dan Balanced Accuracy.
+1. MCC sangat robust terhadap imbalance dan memberikan gambaran keseluruhan yang lebih baik.
+2. Balanced Accuracy memberikan rata-rata recall per kelas.
 
 **Contoh kasus ceiling effect untuk metrik ini:**
-> ___________________________________________________
+> Jika kedua model mencapai Macro F1-Score > 97%, maka sulit membedakan mana yang lebih unggul secara bermakna.
 
 ---
 
@@ -124,10 +131,10 @@ Bayangkan data yang akan dikumpulkan dari eksperimen. Evaluasi 4 dimensi kualita
 
 | Dimensi | Pertanyaan | Jawaban | Strategi Mitigasi |
 |---------|-----------|---------|------------------|
-| Completeness | *Apakah semua data point terkumpul?* | | |
-| Consistency | *Apakah ada kontradiksi internal?* | | |
-| Validity | *Apakah benar-benar mengukur yang dimaksud?* | | |
-| Representativeness | *Apakah sampel mewakili populasi target?* | | |
+| Completeness | Apakah semua data point terkumpul? | Ya (setelah augmentasi) | Script validasi otomatis |
+| Consistency | *Apakah ada kontradiksi internal?* | Rendah | Double labeling oleh ahli BI + Kappa test |
+| Validity | *Apakah benar-benar mengukur yang dimaksud?* | Tinggi | Validasi visual dengan Grad-CAM |
+| Representativeness | *Apakah sampel mewakili populasi target?* | Sedang-Tinggi | Augmentasi realistis + sampling dari sumber BI |
 
 ---
 
@@ -136,5 +143,5 @@ Bayangkan data yang akan dikumpulkan dari eksperimen. Evaluasi 4 dimensi kualita
 > Mengapa memilih metrik setelah melihat data dianggap p-hacking? Apa bedanya dengan eksplorasi data yang sah?
 
 **Jawaban:**
-> ___________________________________________________
-> ___________________________________________________
+> Memilih metrik setelah melihat data dianggap p-hacking karena peneliti dapat memilih metrik yang secara tidak sadar membuat hasil eksperimen terlihat lebih baik atau signifikan, sehingga mengurangi objektivitas dan reliabilitas penelitian.
+> Eksplorasi data yang sah dilakukan secara transparan, dilabeli sebagai exploratory, dan tidak digunakan untuk membuktikan hipotesis utama. Semua metrik yang digunakan untuk menguji hipotesis (confirmatory) harus ditentukan sebelum eksperimen dimulai.
