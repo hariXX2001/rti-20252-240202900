@@ -67,34 +67,34 @@ Jika rantai ini tidak lengkap, RQ belum mature. Bi-directional: RQ yang tidak bi
 ```
 RQ-CONTRIBUTION-HYPOTHESIS
 
-Gap Statement  : ____________________
+Gap Statement  : Mayoritas literatur hanya melakukan klasifikasi biner (bagus/rusak) pada uang Rupiah. Sangat sedikit yang melakukan klasifikasi granular tingkat kerusakan (ringan, sedang, berat) menggunakan model efisien yang cocok untuk aplikasi mobile.
 
 Research Question:
-  Tipe         : [ ] Comparison  [ ] Improvement  [ ] Exploratory
-  Formulasi    : ____________________
-  Variabel IV  : ____________________
-  Variabel DV  : ____________________
-  Metrik       : ____________________
-  Dataset      : ____________________
-  Baseline     : ____________________
+  Tipe         : [ X ] Comparison  [ ] Improvement  [ ] Exploratory
+  Formulasi    : Seberapa baik MobileNetV2 dibandingkan dengan baseline CNN 2-Layer dalam mengklasifikasikan tingkat kerusakan uang Rupiah (ringan, sedang, berat) berdasarkan Accuracy dan Macro F1-Score pada dataset 1.000 citra berlabel ahli BI?
+  Variabel IV  : Arsitektur model (MobileNetV2 vs CNN 2-Layer)
+  Variabel DV  : Performa klasifikasi tingkat kerusakan
+  Metrik       : Accuracy dan Macro F1-Score
+  Dataset      : 1.000 citra uang Rupiah berlabel tingkat kerusakan oleh ahli Bank Indonesia
+  Baseline     : CNN 2-Layer
 
 Quality Check RQ:
-  [ ] Variabel spesifik
-  [ ] Metrik jelas
-  [ ] Baseline ada
-  [ ] Konteks disebutkan
-  [ ] Memerlukan eksperimen (bukan hanya survei literatur)
+  [ v ] Variabel spesifik
+  [ v ] Metrik jelas
+  [ v ] Baseline ada
+  [ v ] Konteks disebutkan
+  [ v ] Memerlukan eksperimen (bukan hanya survei literatur)
 
 Contribution Statement:
-  Apa yang baru diketahui : ____________________
-  Jenis kontribusi        : [ ] Improvement  [ ] Comparison  [ ] Novel approach
-  Gap yang diisi          : ____________________
+  Apa yang baru diketahui : Perbandingan performa MobileNetV2 versus baseline CNN 2-Layer untuk klasifikasi 3 tingkat kerusakan uang Rupiah beserta analisis visual menggunakan Grad-CAM.
+  Jenis kontribusi        : [ x ] Improvement  [ x ] Comparison  [ ] Novel approach
+  Gap yang diisi          : Data Gap + Method Gap
 
 Hypothesis Pair:
-  H₀ : ____________________
-  H₁ : ____________________
-  Threshold              : ____________________
-  Justifikasi threshold  : ____________________
+  H₀ : Tidak ada perbedaan signifikan dalam Accuracy dan Macro F1-Score antara MobileNetV2 dengan baseline CNN 2-Layer pada klasifikasi tingkat kerusakan uang Rupiah.
+  H₁ : MobileNetV2 menghasilkan Accuracy dan Macro F1-Score yang secara signifikan lebih tinggi daripada baseline CNN 2-Layer.
+  Threshold              : α = 0.05 (p-value < 0.05)
+  Justifikasi threshold  : Merupakan standar signifikansi statistik yang umum digunakan dalam penelitian machine learning dan computer vision.
 ```
 
 ---
@@ -103,24 +103,24 @@ Hypothesis Pair:
 
 Gunakan gap yang ditemukan di WS-03. Transformasikan menjadi Research Question.
 
-**Gap dari WS-03:** ____________________________________
+**Gap dari WS-03:**Data Gap + Method Gap (klasifikasi hanya biner dan belum ada penerapan model ringan seperti MobileNetV2 untuk klasifikasi tingkat kerusakan granular pada uang Rupiah).
 
 **RQ versi pertama (tulis bebas):**
-> ___________________________________________________
+> Bagaimana cara mendeteksi tingkat kerusakan uang Rupiah secara lebih akurat?
 
 **Evaluasi RQ:**
 
 | Komponen | Ada? | Isi |
 |----------|------|-----|
-| Metode spesifik | *Contoh: Ya — CNN vs RF* | |
-| Metrik terukur | | |
-| Baseline | | |
-| Dataset/konteks | | |
+| Metode spesifik | Tidak | - |
+| Metrik terukur | Tidak | - |
+| Baseline | Tidak | - |
+| Dataset/konteks | Sebagian | Uang Rupiah |
 
-**Tipe RQ:** [ ] Comparison / [ ] Improvement / [ ] Exploratory
+**Tipe RQ:** [X] Comparison / [ ] Improvement / [ ] Exploratory
 
 **RQ versi revisi (setelah evaluasi):**
-> ___________________________________________________
+> Seberapa baik MobileNetV2 dibandingkan dengan baseline CNN 2-Layer dalam mengklasifikasikan tingkat kerusakan uang Rupiah (ringan, sedang, berat) berdasarkan Accuracy dan Macro F1-Score pada dataset 1.000 citra berlabel ahli BI?
 
 ---
 
@@ -130,14 +130,14 @@ Rumuskan pasangan hipotesis dari RQ di Latihan 1.
 
 | Komponen | Isi |
 |----------|-----|
-| H₀ | *Contoh: Tidak ada perbedaan signifikan F1-Score antara CNN dan RF pada dataset CIC-MalMem-2022* |
-| H₁ | |
-| Metrik | |
-| Threshold | |
-| Justifikasi threshold | |
+| H₀ | Tidak ada perbedaan signifikan dalam Accuracy dan Macro F1-Score antara MobileNetV2 dengan baseline CNN 2-Layer pada klasifikasi tingkat kerusakan uang Rupiah |
+| H₁ | MobileNetV2 menghasilkan Accuracy dan Macro F1-Score yang secara signifikan lebih tinggi daripada baseline CNN 2-Layer |
+| Metrik |Accuracy dan Macro F1-Score |
+| Threshold | p-value < 0.05 |
+| Justifikasi threshold | Standar konvensional dalam penelitian ML/Computer Vision |
 
-**Apakah hipotesis ini falsifiable?** [ ] Ya / [ ] Tidak
-> Bagaimana cara membuktikannya salah? ___________________
+**Apakah hipotesis ini falsifiable?** [ X ] Ya / [ ] Tidak
+> Bagaimana cara membuktikannya salah? Dengan melakukan eksperimen menggunakan 5-fold cross validation, menghitung metrik evaluasi, kemudian melakukan uji statistik (Independent t-test atau Wilcoxon Signed-Rank Test). Jika p-value > 0.05, maka H₀ diterima dan H₁ ditolak.
 
 ---
 
@@ -147,14 +147,14 @@ Lengkapi rantai dari RQ hingga metode analisis.
 
 | Tahap | Isi |
 |-------|-----|
-| RQ | *Contoh: Apakah CNN menghasilkan F1-Score lebih tinggi dari RF...* |
-| Variable (IV) | *Contoh: Jenis algoritma (CNN vs RF)* |
-| Variable (DV) | |
-| Metric | |
-| Data source | |
-| Analysis method | |
+| RQ | Seberapa baik MobileNetV2 dibandingkan CNN 2-Layer dalam klasifikasi tingkat kerusakan uang Rupiah… |
+| Variable (IV) | Arsitektur model (MobileNetV2 vs CNN 2-Layer) |
+| Variable (DV) | Performa klasifikasi tingkat kerusakan |
+| Metric | Accuracy dan Macro F1-Score |
+| Data source | Dataset 1.000 citra uang Rupiah berlabel ahli BI |
+| Analysis method | Training dengan 5-fold cross validation, evaluasi metrik, uji statistik, Confusion Matrix, dan Grad-CAM |
 
-**Apakah rantai lengkap?** [ ] Ya / [ ] Tidak
+**Apakah rantai lengkap?** [ X ] Ya / [ ] Tidak
 > Jika tidak, tahap mana yang perlu direvisi? ______________
 
 ---
@@ -163,6 +163,11 @@ Lengkapi rantai dari RQ hingga metode analisis.
 
 > Ambil satu judul skripsi/paper yang pernah dibaca. Coba ekstrak RQ-nya. Apakah RQ tersebut memenuhi semua komponen (metode, metrik, baseline, konteks)? Jika tidak, apa yang hilang?
 
-**Judul:** _____________________________________________
-**RQ yang diekstrak:** __________________________________
-**Komponen yang hilang:** _______________________________
+**Judul:**Deteksi Kondisi Uang Bagus Dan Rusak Dengan Pengolahan Citra Digital Berbasis Convolutional Neural Network (CNN) – Nandika et al. (2025)
+**RQ yang diekstrak:** Apakah CNN dapat mendeteksi kondisi uang rusak dengan baik?
+**Komponen yang hilang:** 
+1. Tidak ada baseline perbandingan
+2. Metrik hanya akurasi (tidak menggunakan Macro F1-Score)
+3. Tidak menyebutkan jumlah dan karakteristik dataset
+4. Tidak ada granularitas tingkat kerusakan (ringan/sedang/berat)
+5. Tidak spesifik konteks eksperimen
