@@ -77,41 +77,44 @@ Membandingkan deep learning 2024 dengan decision tree sederhana tanpa justifikas
 ```
 LITERATURE MAPPING
 
-Topik      : ____________________
-Database   : ____________________
-Query      : ____________________
-Tahun      : ____________________
-Hasil awal : ____ paper → Screening → ____ paper final
+Topik      : Klasifikasi Tingkat Kerusakan Uang Rupiah (Ringan, Sedang, Berat) berbasis Deep Learning
+Database   : Google Scholar, IEEE Xplore, Garuda, ResearchGate, arXiv
+Query      : ("uang rupiah" OR "rupiah banknote" OR "currency damage" OR "banknote fitness" OR "kerusakan uang") AND ("CNN" OR "Convolutional Neural Network" OR "deep learning" OR "MobileNet")
+Tahun      : 2021 sampai dengan 2025
+Hasil awal : 35 paper → Screening → 7 paper final
 
 Literature Matrix (concept-centric):
 
-| Study | Tahun | Method | Data | Result | Limitation |
-|-------|-------|--------|------|--------|------------|
-|       |       |        |      |        |            |
+#,Study,Tahun,Method,Dataset,Result,Limitasi
+1,Nandika et al.,2025,CNN standar,500 gambar (bagus vs rusak),Akurasi 93%,"Hanya klasifikasi biner, dataset kecil, tidak ada tingkat kerusakan"
+2,Roshan et al.,2025,VGG16,Gambar uang Rupiah,Akurasi tinggi,"Klasifikasi biner (bagus/rusak), belum granular"
+3,Jaman et al.,2025,CNN + Mobile App,Bangladesh banknotes,Akurasi ~95%+,"Negara berbeda, fokus recognition + counterfeit, minim damage level"
+4,Kerdsri & Treeratpitu (Bank of Thailand),2021,ResNet-101,Banknote defect (multi-denomination),Baik untuk defect classification,"Bukan Rupiah, fokus defect spesifik, tidak granular ringan-sedang-berat"
+5,Neto et al.,2023,CNN,Brazilian Real banknotes,Akurasi baik untuk damaged notes,"Konteks Brasil, lebih ke recognition untuk tunanetra"
+6,Swain et al.,2023,RFE-CNN,Indian currency,Akurasi tinggi,"Fokus recognition & fake, bukan tingkat kerusakan fisik"
+7,Veeramsetty et al.,2022,CNN-based,Indian banknotes,Baik untuk feature extraction,"Dataset India, tidak spesifik tingkat kerusakan"
 
 Pola yang ditemukan:
-  Metode dominan     : ____________________
-  Dataset umum       : ____________________
-  Limitasi berulang  : ____________________
+  Metode dominan     : CNN dan variannya (VGG16, ResNet, MobileNet).
+  Dataset umum       : Dataset mandiri berukuran kecil hingga sedang (500–2000 gambar), sering diambil dalam kondisi terkontrol.
+  Limitasi berulang  : Mayoritas hanya klasifikasi biner (bagus/rusak atau asli/palsu), sedikit yang melakukan klasifikasi granular tingkat kerusakan, minim pengujian pada kondisi lapangan (pencahayaan variatif, kamera smartphone).
 
 GAP IDENTIFICATION
 
-Gap 1: [Jenis: performance / method / data / context]
-  Deskripsi    : ____________________
-  Bukti        : ____________________
-  Signifikansi : ____________________
+Gap 1: [Data Gap + Method Gap]
+  Deskripsi    : Hampir semua studi hanya melakukan klasifikasi biner (bagus/rusak). Sangat sedikit yang mengklasifikasikan tingkat kerusakan secara granular (ringan, sedang, berat) khusus untuk uang Rupiah. Belum ada yang mengoptimalkan model ringan seperti MobileNetV2 untuk kasus ini.
+  Bukti        : Dari 7 paper (2021–2025) yang direview, semuanya masih dominan biner atau recognition saja.
+  Signifikansi : Membantu Bank Indonesia dalam proses sortir uang tidak layak edar yang lebih presisi, terutama mendeteksi kerusakan ringan (sobek kecil, luntur pinggiran) yang sering lolos.
 
-Gap 2: [Jenis: ____]
-  Deskripsi    : ____________________
-  Bukti        : ____________________
-  Signifikansi : ____________________
+Gap 2: [Context Gap + Performance Gap]
+  Deskripsi    : Model existing jarang diuji pada variasi kerusakan ringan di kondisi nyata Indonesia (pencahayaan tidak ideal, kamera ponsel).
+  Bukti        : Dari 7 paper (2021–2025) yang direview, semuanya masih dominan biner atau recognition saja.
+  Signifikansi : Membantu Bank Indonesia dalam proses sortir uang tidak layak edar yang lebih presisi, terutama mendeteksi kerusakan ringan (sobek kecil, luntur pinggiran) yang sering lolos.
 
 Baseline Selection:
-| Baseline | Relevansi | Representatif | Source |
-|----------|-----------|---------------|--------|
-|          |           |               |        |
-```
-
+Baseline,Relevansi,Representatif,Sumber
+CNN 2-Layer,Tinggi,Pendekatan dasar paling umum,Nandika et al. (2025)
+VGG16,Tinggi,Arsitektur klasik yang kuat,Roshan et al. (2025)
 ---
 
 ## Latihan 1 — Concept-Centric Literature Table
@@ -123,21 +126,20 @@ Gunakan topik riset dari WS-02. Cari minimal 5 paper relevan menggunakan databas
 > - Tulis query Boolean yang digunakan: contoh `("object detection" OR "image classification") AND ("edge computing") NOT ("medical")`. Dokumentasikan query secara eksplisit.
 > - Akses gratis: buka Google Scholar → cari judul paper → klik [PDF] jika tersedia, atau akses lewat campus VPN
 
-**Topik riset:** ________________________________________
-**Query pencarian:** ____________________________________
-**Database:** ___________________________________________
+**Topik riset:** Klasifikasi Tingkat Kerusakan Uang Rupiah (Ringan, Sedang, Berat) berbasis Deep Learning
+**Query pencarian:** ("uang rupiah" OR "rupiah banknote" OR "kerusakan uang" OR "banknote damage") AND ("CNN" OR "Convolutional Neural Network" OR "deep learning" OR "VGG16" OR "MobileNet")
+**Database:** Google Scholar, Garuda, IEEE Xplore, ResearchGate
 
 | # | Study | Tahun | Method | Dataset | Result | Limitasi |
 |---|-------|-------|--------|---------|--------|----------|
-| 1 | *Contoh: Rahman et al.* | *2023* | *CNN* | *ImageNet subset* | *Acc 91%* | *Hanya 3 kelas* |
-| 2 | | | | | | |
-| 3 | | | | | | |
-| 4 | | | | | | |
-| 5 | | | | | | |
+| 1 | Nandika et al. | 2025 | CNN Standar | 500 gambar (bagus vs rusak)| Akurasi 93% | Hanya klasifikasi biner, dataset kecil |
+| 2 | Roshan et al. | 2025 | VGG16 |Gambar Rupiah (3 tingkat kerusakan: >20%, >40%, >50%)| Akurasi 93.33%| Masih terbatas variasi kerusakan ringan & kondisi lapangan |
+| 3 | Albani et al.| 2024 |Xception (Transfer Learning) | Uang Rupiah tidak layak edar| Akurasi tinggi| Fokus tidak layak edar (bukan granular ringan-sedang-berat)|
+| 4 |Kurniadi et al. |2025|CNN + KAN |Uang Rupiah denomination |Baik untuk klasifikasi |Lebih ke denomination daripada tingkat kerusakan|
+| 5 | Veeramsetty et al. / Indian study| 2022-2023|CNN-based |Indian banknotes |Akurasi baik|Konteks negara lain, tidak spesifik Rupiah |
 
-**Pola yang terlihat — Metode dominan:** ___________________
-**Limitasi yang berulang:** ______________________________
-
+**Pola yang terlihat — Metode dominan:** Metode dominan: Convolutional Neural Network (CNN) dan Transfer Learning (VGG16, Xception).
+**Limitasi yang berulang:** Mayoritas penelitian masih menggunakan klasifikasi biner (bagus/rusak), dataset relatif kecil, variasi kerusakan ringan kurang dieksplorasi, dan minim pengujian pada kondisi lapangan (pencahayaan variatif, kamera smartphone).
 ---
 
 ## Latihan 2 — Gap Identification
@@ -146,15 +148,14 @@ Berdasarkan tabel di Latihan 1, identifikasi gap.
 
 | Jenis Gap | Ditemukan? | Gap Statement |
 |-----------|-----------|---------------|
-| Performance Gap | [ ] Ya / [ ] Tidak | *Contoh: Akurasi turun di bawah 80% untuk kelas minoritas* |
-| Method Gap | [ ] Ya / [ ] Tidak | |
-| Data Gap | [ ] Ya / [ ] Tidak | |
-| Context Gap | [ ] Ya / [ ] Tidak | |
+| Performance Gap | [v] Ya / [ ] Tidak | Akurasi model masih rendah pada kelas kerusakan ringan (sobek kecil, luntur pinggiran) |
+| Method Gap | [v] Ya / [ ] Tidak | Belum ada penerapan MobileNetV2 (model ringan untuk mobile) dikombinasikan dengan attention mechanism untuk klasifikasi 3 kelas kerusakan Rupiah |
+| Data Gap | [ v] Ya / [ ] Tidak | Dataset yang ada jarang memiliki label granular (ringan, sedang, berat) dan kurang representatif kondisi nyata |
+| Context Gap | [v ] Ya / [ ] Tidak | Minim pengujian pada konteks Indonesia (layanan kas keliling BI dengan kamera ponsel) |
 
-**Gap utama yang dipilih:** _____________________________
+**Gap utama yang dipilih:**Data Gap + Method Gap
 **Mengapa gap ini penting (bukan sekadar "belum ada yang meneliti")?**
-> ___________________________________________________
-
+> Karena klasifikasi biner yang ada saat ini kurang membantu Bank Indonesia dalam mengambil keputusan akurat mengenai uang yang masih layak edar versus yang harus ditarik dari peredaran. Deteksi dini kerusakan ringan dapat meningkatkan efisiensi proses sortir dan menjaga kualitas uang Rupiah yang beredar.
 ---
 
 ## Latihan 3 — Baseline Selection
@@ -163,12 +164,11 @@ Pilih 2 baseline dari literatur yang sudah dibaca.
 
 | # | Baseline | Mengapa Relevan | Mengapa Representatif | Apakah SOTA? | Sumber |
 |---|----------|----------------|----------------------|-------------|--------|
-| 1 | *Contoh: RF + TF-IDF* | *Task sama: klasifikasi teks* | *Dipakai 6 dari 10 paper* | *Bukan, tapi common practice* | *Lee et al., 2022* |
-| 2 | | | | | |
+| 1 | CNN 2-Layer | Task klasifikasi citra kerusakan uang sama | Pendekatan dasar yang paling umum digunakan | Tidak | Nandika et al. (2025) |
+| 2 | VGG16 | Telah digunakan untuk klasifikasi tingkat kerusakan Rupiah | Arsitektur klasik yang kuat dan sering dijadikan pembanding | Tidak (tapi kuat) | Roshan et al. (2025) |
 
-**Apakah pemilihan baseline ini bisa dianggap straw man?** [ ] Ya / [ ] Tidak
-> Justifikasi: ________________________________________
-
+**Apakah pemilihan baseline ini bisa dianggap straw man?** [ ] Ya / [v] Tidak
+> Justifikasi: Baseline dipilih karena merupakan metode yang paling umum dan representatif di literatur terkini (common practice), bukan baseline yang sengaja dibuat lemah untuk membuat metode baru terlihat superior.
 ---
 
 ## Refleksi
@@ -176,5 +176,5 @@ Pilih 2 baseline dari literatur yang sudah dibaca.
 > Apa perbedaan antara "belum ada yang meneliti ini" (klaim tanpa bukti) dengan research gap yang valid? Bagaimana cara membuktikan bahwa sebuah gap benar-benar ada?
 
 **Jawaban:**
-> ___________________________________________________
-> ___________________________________________________
+> Perbedaan antara “belum ada yang meneliti ini” (klaim tanpa bukti) dengan research gap yang valid adalah: klaim “belum ada” bersifat absolut dan sering tidak didukung proses pencarian yang sistematis, sedangkan research gap yang valid didasarkan pada literature mapping yang jelas (query Boolean, database, tahun, screening) serta menunjukkan pola limitasi yang berulang di studi-studi existing.
+> Cara membuktikan bahwa sebuah gap benar-benar ada adalah dengan mendokumentasikan proses pencarian literatur secara eksplisit, membuat tabel literature matrix concept-centric, dan menunjukkan kekurangan yang konsisten dari beberapa paper terkini (2021–2025)
