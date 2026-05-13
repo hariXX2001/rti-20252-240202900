@@ -68,36 +68,36 @@ Ancaman validitas harus diidentifikasi **sebelum** eksperimen dan mitigasinya di
 ```
 EXPERIMENT DESIGN
 
-Research Question : ____________________
-Hypothesis        : ____________________
-Tipe Eksperimen   : [ ] Comparison  [ ] Ablation  [ ] Parameter
+Research Question : Apakah MobileNetV2 memberikan performa klasifikasi yang lebih baik dibandingkan baseline CNN untuk mendeteksi rupiah kertas yang rusak?
+Hypothesis        : MobileNetV2 akan menghasilkan Macro F1-Score yang secara signifikan lebih tinggi dibandingkan Baseline CNN pada dataset gambar rupiah kertas rusak.
+Tipe Eksperimen   : [✅] Comparison  [ ] Ablation  [ ] Parameter
 
 Kondisi Eksperimen:
 | Kondisi | Deskripsi | IV Value | CV Settings |
 |---------|-----------|----------|-------------|
-| Control |           |          |             |
-| Treatment |         |          |             |
+| Control |Baseline CNN (custom CNN)|Baseline CNN|Dataset sama, stratified split (70/15/15), random seed 42, preprocessing & augmentasi identik, optimizer Adam, lr=0.001, batch_size=32, epochs=50|
+| Treatment |MobileNetV2|MobileNetV2|Sama persis dengan Control|
 
 Fairness Checklist:
-  [ ] Dataset identik untuk semua kondisi
-  [ ] Preprocessing setara
-  [ ] Tuning effort setara
-  [ ] Environment identik
-  [ ] Metrik evaluasi sama
+  [✅] Train, validation, dan test set yang sama persis (stratified split
+  [✅] Resize ke 224×224, normalization, augmentasi (rotation, brightness, contrast) sama untuk kedua model
+  [✅] Hyperparameter yang sama (lr, batch_size, epochs). MobileNetV2 pakai pretrained weights, Baseline CNN di-train from scratch
+  [✅] Python, PyTorch version, GPU device, dan random seed yang sama
+  [✅] Macro F1-Score (primary), MCC, Balanced Accuracy, Precision, Recall
 
 Threat Analysis:
 | Threat Type | Ancaman Spesifik | Mitigasi |
 |-------------|-----------------|----------|
-| Internal    |                 |          |
-| External    |                 |          |
-| Construct   |                 |          |
-| Conclusion  |                 |          |
+| Internal    |        Data leakage antar train-test split         |     Stratified split + fixed random seed + tidak ada overlap     |
+| External    |        Dataset sangat spesifik (hanya rupiah Indonesia)        |     Dokumentasikan karakteristik dataset dengan jelas dan sarankan pengujian di domain lain     |
+| Construct   |        Metrik tidak mencerminkan kegunaan di dunia nyata         |     Tambahkan Grad-CAM visualization dan evaluasi visual oleh manusia     |
+| Conclusion  |          Hasil tidak stabil karena single run       |     Jalankan multiple runs (minimal 5–10 run) dengan random seed berbeda     |
 
 Statistical Plan:
-  Uji statistik   : ____________________
-  Justifikasi      : ____________________
-  Alpha            : ____________________
-  Effect size min  : ____________________
+  Uji statistik   : Independent Samples T-Test (atau Wilcoxon Rank-Sum Test jika distribusi tidak normal)
+  Justifikasi      : Eksperimen akan dijalankan sebanyak 10 runs dengan random seed berbeda untuk mendapatkan distribusi performa. Uji ini digunakan untuk membandingkan rata-rata performa (terutama Macro F1-Score) antara kedua model secara statistik.
+  Alpha            : 0.05
+  Effect size min  : Cohen’s d ≥ 0.5 (medium effect)
 ```
 
 ---
@@ -106,13 +106,13 @@ Statistical Plan:
 
 Susun desain eksperimen berdasarkan RQ, variabel, dan sistem dari WS-04 sampai WS-06.
 
-**RQ:** __________________________________________________
-**Tipe eksperimen:** [ ] Comparison / [ ] Ablation / [ ] Parameter
+**RQ:** Apakah MobileNetV2 memberikan performa klasifikasi yang lebih baik dibandingkan baseline CNN untuk mendeteksi rupiah kertas yang rusak?
+**Tipe eksperimen:** [✅] Comparison / [ ] Ablation / [ ] Parameter
 
 | Kondisi | Deskripsi | IV Value | CV Settings |
 |---------|-----------|----------|-------------|
-| Control | *Contoh: RF baseline dari literatur* | *RF* | *Dataset X, 80:20 split, seed 42* |
-| Treatment | | | |
+| Control | Baseline CNN | Baseline CNN | Dataset sama, stratified split (70/15/15), seed 42, preprocessing & augmentasi identik, Adam optimizer, lr=0.001, batch_size=32, epochs=50 |
+| Treatment | MobileNetV2 | MobileNetV2 | Sama persis dengan Control |
 
 ---
 
@@ -122,13 +122,13 @@ Evaluasi apakah desain eksperimen di Latihan 1 sudah fair.
 
 | Kriteria | Status | Detail |
 |----------|--------|--------|
-| Dataset identik | *Contoh: ✅ — sama-sama pakai CIC-MalMem-2022* | |
-| Preprocessing setara | | |
-| Tuning effort setara | | |
-| Environment identik | | |
-| Metrik evaluasi sama | | |
+| Dataset identik | ✅ | Train/val/test split yang sama persis (stratified) |
+| Preprocessing setara | ✅ | Resize 224×224, normalization, augmentasi sama |
+| Tuning effort setara | ✅ | Hyperparameter sama untuk kedua model |
+| Environment identik | ✅ | Python, PyTorch, GPU, dan random seed yang sama |
+| Metrik evaluasi sama | ✅ | Macro F1-Score (primary), MCC, Balanced Accuracy |
 
-**Ada yang tidak fair?** [ ] Ya / [ ] Tidak
+**Ada yang tidak fair?** [ ] Ya / [✅] Tidak
 > Jika ya, bagaimana cara memperbaikinya? ________________
 
 ---
@@ -139,15 +139,14 @@ Identifikasi ancaman validitas untuk desain eksperimen ini.
 
 | Threat Type | Ancaman Spesifik | Mitigasi |
 |-------------|-----------------|----------|
-| Internal | *Contoh: Data leakage antara train-test* | *Contoh: Gunakan stratified split, validasi tidak ada overlap* |
-| External | | |
-| Construct | | |
-| Conclusion | | |
+| Internal | Ketidakseimbangan kelas | Macro F1-Score & MCC sebagai metrik utama |
+| External | Dataset terlalu spesifik (rupiah Indonesia) | Dokumentasi dataset lengkap + saran generalisasi |
+| Construct | Metrik tidak mencerminkan real-world usage | Tambahkan Grad-CAM visualization |
+| Conclusion | Hasil tidak stabil (single run) | 10× repeated runs dengan random seed berbeda |
 
-**Ancaman mana yang paling sulit dimitigasi?** _____________
+**Ancaman mana yang paling sulit dimitigasi?** External Validity
 **Mengapa?**
-> ___________________________________________________
-
+> Dataset gambar rupiah kertas rusak sangat spesifik terhadap domain mata uang Indonesia, sehingga sulit digeneralisasi ke mata uang lain atau kondisi kerusakan yang berbeda.
 ---
 
 ## Refleksi
@@ -155,6 +154,6 @@ Identifikasi ancaman validitas untuk desain eksperimen ini.
 > Sebuah paper melaporkan "metode kami mengalahkan semua baseline." Apa 3 pertanyaan pertama yang harus diajukan untuk mengevaluasi klaim ini?
 
 **Jawaban:**
-1. ___________________________________________________
-2. ___________________________________________________
-3. ___________________________________________________
+1. Apakah perbandingan dilakukan secara fair? (Apakah baseline menggunakan dataset, preprocessing, tuning effort, environment, dan jumlah run yang sama persis?)
+2. Seberapa kuat validitas internal eksperimennya? (Apakah confounding variables sudah dikontrol dengan baik?)
+3. Apakah klaim didukung oleh uji statistik yang tepat beserta effect size dan multiple runs?
