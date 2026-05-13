@@ -80,25 +80,37 @@ Jika variabel tidak bisa di-map ke komponen apapun → arsitektur perlu didesain
 ```
 SYSTEM-EXPERIMENT MAPPING
 
-Research Question: ____________________
+Research Question:Apakah MobileNetV2 memberikan performa klasifikasi yang lebih baik dibandingkan baseline CNN untuk mendeteksi rupiah kertas yang rusak?
 
 Variable → Component Mapping:
 | Variabel | Tipe | Komponen Sistem | Cara Manipulasi/Pengukuran |
 |----------|------|-----------------|---------------------------|
-|          | IV   |                 |                           |
-|          | DV   |                 |                           |
-|          | CV   |                 |                           |
+|Jenis arsitektur model| IV   |models/ (MobileNetV2 & BaselineCNN)|Ganti model.type di config.yaml|
+|Performa klasifikasi| DV   |metrics/ + trainer.py + Logger|Macro F1-Score (primary), MCC & Balanced Accuracy (secondary)|
+|Dataset & splitting| CV   |dataloaders/ + dataset.py|Fix random seed + config data.split|
+|Augmentasi & preprocessing|  CV  |transforms/ + config.preprocessing|Dikunci di config file|
+|Hyperparameter (lr, batch, epochs)|  CV  |config.yaml + Training Loop|Dikunci di config training:|
 
 4 Prinsip Desain:
-  [ ] Traceability — Setiap komponen bisa ditelusuri ke variabel
-  [ ] Variable Isolation — IV bisa diubah tanpa mengubah CV
-  [ ] Measurement Integration — Pengukuran DV built-in
-  [ ] Reproducibility — Setup bisa direkonstruksi
+  [✅] Traceability — Setiap komponen bisa ditelusuri ke variabel
+  [✅] Variable Isolation — IV bisa diubah tanpa mengubah CV
+  [✅] Measurement Integration — Pengukuran DV built-in
+  [✅] Reproducibility — Setup bisa direkonstruksi
 
 Experimental Setup:
-  Input data     : ____________________
-  Parameter      : ____________________
-  Output format  : ____________________
+  Input data     : Gambar rupiah kertas rusak dan tidak rusak (224×224 px) yang telah melalui preprocessing (resize, normalization, dan augmentasi). Dataset dibagi stratified menjadi train (70%), val (15%), test (15%).
+  Parameter      :
+- Model architecture (MobileNetV2 vs Baseline CNN)  
+- Learning rate, batch size, epochs  
+- Augmentation parameters  
+- Random seed (fixed = 42)  
+Semua parameter dikendalikan melalui `config.yaml`
+  Output format  :
+- Best model weights (.pth)  
+- Metrics table (CSV & JSON): Macro F1-Score (primary), MCC, Balanced Accuracy  
+- Training history & logs  
+- Visualizations (Confusion Matrix & Grad-CAM)  
+- Full experiment configuration file untuk reproducibility
 ```
 
 ---
@@ -107,15 +119,17 @@ Experimental Setup:
 
 Gunakan RQ dan variabel dari WS-05. Petakan ke komponen sistem.
 
-**RQ:** __________________________________________________
+**RQ:** Apakah MobileNetV2 memberikan performa klasifikasi yang lebih baik dibandingkan baseline CNN untuk mendeteksi rupiah kertas yang rusak?
 
 | Variabel | Tipe | Komponen Sistem | Cara Manipulasi / Pengukuran |
 |----------|------|-----------------|---------------------------|
-| *Contoh: Jenis model* | *IV* | *Modul classifier (swap RF ↔ CNN)* | *Ganti config `model_type`* |
-| | DV | | |
-| | CV | | |
+| Jenis arsitektur model | IV | models/mobile_net.py & models/baseline_cnn.py | models/mobile_net.py & models/baseline_cnn.py |
+|Performa klasifikasi (Macro F1, MCC, dll)| DV |metrics/ + trainer.py + Logger|Otomatis dihitung dan disimpan setiap epoch|
+|Dataset split & augmentasi| CV |dataloaders/ + dataset.py + transforms/|Fix random seed + konfigurasi di config.yaml|
+|Preprocessing (resize, normalization)|  CV  |config.preprocessing + transforms.Compose|Dikunci melalui config file|
+|Hyperparameter (lr, batch_size, epochs)|  CV  |config.training|Dikendalikan sepenuhnya melalui config.yaml|
 
-**Apakah semua variabel bisa di-map?** [ ] Ya / [ ] Tidak
+**Apakah semua variabel bisa di-map?** [Y] Ya / [ ] Tidak
 > Jika tidak, komponen apa yang perlu ditambahkan? _________
 
 ---
@@ -126,15 +140,14 @@ Evaluasi desain sistem terhadap 4 prinsip.
 
 | Prinsip | Status | Bukti / Penjelasan |
 |---------|--------|-------------------|
-| Traceability | *Contoh: ✅ — setiap modul punya label variabel* | |
-| Modularity | | |
-| Controllability | | |
-| Measurability | | |
+| Traceability | ✅ |Komponen sistem terstruktur sesuai variabel riset|
+| Modularity |✅|Model dapat di-swap via factory pattern|
+| Controllability |✅ |Seluruh eksperimen dikendalikan lewat config.yaml|
+| Measurability |✅ |Metrics logging otomatis dan lengkap|
 
-**Prinsip mana yang paling sulit dipenuhi?** _______________
+**Prinsip mana yang paling sulit dipenuhi?** Modularity
 **Strategi untuk mengatasinya:**
-> ___________________________________________________
-
+> Menggunakan Model Factory dan konfigurasi berbasis string untuk memudahkan swapping antar arsitektur.
 ---
 
 ## Latihan 3 — Ablation Study Planning
@@ -144,17 +157,19 @@ Jika sistem memiliki 3 komponen utama, rencanakan ablation study.
 > **Panduan jumlah kondisi:** Untuk 3 komponen (A, B, C), kondisi minimal yang direkomendasikan:
 > Full + (-A) + (-B) + (-C) = **4 kondisi dasar**. Jika waktu memungkinkan, tambahkan kombinasi ganda: (-A,-B), (-A,-C), (-B,-C) = **7 kondisi**. Sesuaikan dengan *computational cost* dan tenggat waktu penelitian.
 
-| Kondisi | Komponen A | Komponen B | Komponen C | Hasil yang Diharapkan |
+| Kondisi | Komponen A  Backbone | Komponen B Augmentasi | Komponen C Normalization | Hasil yang Diharapkan |
 |---------|-----------|-----------|-----------|----------------------|
-| Full | *Contoh: ✅ CNN* | *Contoh: ✅ Temporal features* | *Contoh: ✅ Z-score norm* | *Baseline penuh* |
-| – A | ❌ (ganti RF) | ✅ | ✅ | |
-| – B | ✅ | ❌ (tanpa temporal) | ✅ | |
-| – C | ✅ | ✅ | ❌ (tanpa normalisasi) | |
+| Full | ✅ MobileNetV2 | ✅ | ✅ | Performa tertinggi |
+| – A | ❌ Baseline | ✅ | ✅ | Penurunan paling besar |
+| – B | ✅ MobileNetV2 | ❌ | ✅ | Penurunan sedang |
+| – C | ✅ MobileNetV2 | ✅ | ❌ | Penurunan kecil |
+| –A –B  |  ❌ Baseline | ❌ | ✅ | Performa terendah |
+| –A –C | ❌ Baseline | ✅ | ❌ | Sangat rendah |
+| –B –C | ✅ MobileNetV2 | ❌ | ❌ | Rendah |
 
-**Komponen mana yang diprediksi paling berkontribusi?** _____
+**Komponen mana yang diprediksi paling berkontribusi?** Komponen A (Backbone)
 **Mengapa?**
-> ___________________________________________________
-
+> Karena perbedaan kemampuan representasi fitur antar arsitektur model jauh lebih besar dibandingkan augmentasi atau normalization.
 ---
 
 ## Refleksi
@@ -162,5 +177,5 @@ Jika sistem memiliki 3 komponen utama, rencanakan ablation study.
 > Apa risiko jika sistem dibangun seperti produk (monolitik, fitur lengkap) lalu baru dilakukan eksperimen? Mengapa arsitektur modular penting untuk riset?
 
 **Jawaban:**
-> ___________________________________________________
-> ___________________________________________________
+> Risiko utamanya adalah sulitnya mengontrol variabel, banyak noise dari fitur yang tidak perlu, dan rendahnya reproducibility.
+> Arsitektur modular penting karena memungkinkan kita mengubah satu faktor saja (IV) secara bersih, sehingga kesimpulan yang diambil lebih kuat dan ilmiah.
