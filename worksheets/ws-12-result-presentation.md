@@ -65,25 +65,31 @@ Keduanya **saling melengkapi**:
 ```
 RESULT PRESENTATION PLAN
 
-Research Question : ____________________
-Metrik Utama      : ____________________
+Research Question : Apakah terdapat perbedaan performa yang signifikan antara MobileNetV2 dan Baseline CNN 2-Layer dalam mengklasifikasikan tingkat kerusakan uang Rupiah (ringan, sedang, berat) berdasarkan Macro F1-Score dan Accuracy pada dataset citra berlabel ahli BI dengan α = 0,05?
+Metrik Utama      : Macro F1-Score
 
 Tabel Hasil:
-| Skenario | Metrik 1 (mean ± std) | Metrik 2 (mean ± std) | n |
-|----------|----------------------|----------------------|---|
-|          |                      |                      |   |
+| Skenario                 | Metrik 1 (Accuracy%)  | Metrik 2 (Macro F1-Score (%)) |  n |
+|--------------------------|-----------------------|-------------------------------|----|
+| A	MobileNetV2 Fine-tune  |     86.89 ± 1.23      |         85.12 ± 1.45          | 10 |
+| C	MobileNetV2 Frozen     |     75.62 ± 0.87      |         74.31 ± 0.92          | 9* |
+| B	Baseline CNN 2-Layer   |     71.84 ± 0.92      |         70.67 ± 0.98          | 10 |
+
+
 
 Visualisasi yang Direncanakan:
 | # | Jenis Grafik | Pesan Utama | Metrik |
 |---|-------------|-------------|--------|
-| 1 |             |             |        |
-| 2 |             |             |        |
+| 1 |Bar Chart + Error Bar|MobileNetV2 Fine-tune (A) secara signifikan lebih unggul dari Baseline CNN (B) pada Macro F1-Score dengan selisih 14.45% (p=0.0012, d=2.34)|Mean Macro F1-Score ± std|
+| 2 |Box Plot|Distribusi Macro F1-Score per model; A-5 (71.23%) adalah outlier yang terlihat jelas; A tetap unggul meskipun ada outlier|Semua run Macro F1-Score (n=10, 10, 9)|
+| 3 |Learning Curve (Line Chart)|MobileNetV2 Fine-tune (A) konvergen lebih cepat (epoch 15-20) dan loss lebih rendah dibanding Baseline CNN (B)|Training & validation loss per epoch|
+| 4 |Confusion Matrix Heatmap	|Model A memiliki error terendah di semua kelas; performa terbaik pada kelas "Ringan"|Confusion matrix rata-rata (10 run)|
 
 Bias Check:
-  [ ] Y-axis mulai dari 0 (atau dijustifikasi)
-  [ ] Error bar/CI ditampilkan
-  [ ] Semua data disertakan (tidak cherry-picked)
-  [ ] Tidak menggunakan 3D tanpa alasan
+  [Y] Y-axis mulai dari 0 (atau dijustifikasi)
+  [Y] Error bar/CI ditampilkan
+  [Y] Semua data disertakan (tidak cherry-picked)
+  [Y] Tidak menggunakan 3D tanpa alasan
 ```
 
 ---
@@ -141,5 +147,5 @@ Evaluasi visualisasi berikut untuk bias (skenario dari contoh):
 
 > Mengapa tabel dan grafik keduanya diperlukan — tidak cukup salah satu saja? Pernahkah Anda membuat grafik yang (tanpa sengaja) menyesatkan?
 
-> ___________________________________________________
-> ___________________________________________________
+> "Tabel dan grafik bukan alat yang bersaing, tapi alat yang saling melengkapi. Satu memberikan presisi, yang lain memberikan pola. Peneliti yang baik menggunakan keduanya untuk menceritakan kisah data yang lengkap dan jujur."
+> Belum pernah
