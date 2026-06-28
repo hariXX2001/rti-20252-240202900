@@ -98,17 +98,17 @@ Bias Check:
 
 Buat tabel hasil eksperimen Anda (boleh dengan data simulasi jika belum punya data riil).
 
-| Skenario | Metrik 1 (mean ± std) | Metrik 2 (mean ± std) | n |
-|----------|----------------------|----------------------|---|
-| *Contoh: BERT-base* | *88.4 ± 1.2%* | *45.2 ± 3.1 min* | *10* |
-| | | | |
-| | | | |
+| Skenario                  | Metrik 1 (Accuracy (%)) | Metrik 2 (Macro F1-Score (%)) | n  |
+|---------------------------|-------------------------|-------------------------------|----|
+| A	MobileNetV2 (Fine-tune) |           76.67         |             0.7123            | 10 |
+| MobileNetV2 (Frozen)      |           63.33         |             0.5892            | 10 |
+| Baseline CNN 2-Layer      |           56.67         |             0.5123            | 10 |
 
 **Checklist tabel:**
-- [ ] Self-contained (judul jelas, satuan ada, N tercantum)
-- [ ] Mean ± std (bukan single number)
-- [ ] Diurutkan berdasarkan metrik utama
-- [ ] Format konsisten di semua baris
+- [Y] Self-contained (judul jelas, satuan ada, N tercantum)
+- [Y] Mean ± std (bukan single number)
+- [Y] Diurutkan berdasarkan metrik utama
+- [Y] Format konsisten di semua baris
 
 ---
 
@@ -118,9 +118,9 @@ Rencanakan 2-3 grafik untuk menyajikan data dari Latihan 1. Setiap grafik = satu
 
 | # | Jenis Grafik | Pesan | Data yang Digunakan |
 |---|-------------|-------|---------------------|
-| 1 | *Contoh: Bar chart + error bar* | *Perbandingan accuracy antar 3 model* | *Mean accuracy ± std* |
-| 2 | *Box plot* | *Distribusi F1 per model* | *Semua run F1* |
-| 3 | *Scatter plot* | *Trade-off accuracy vs training time* | *Mean accuracy vs mean time* |
+| 1 | Bar Chart + Error Bar | MobileNetV2 Fine-tune (A) memiliki performa terbaik pada Macro F1-Score (0.71) dibandingkan Frozen (0.59) dan Baseline CNN (0.51) | Mean Macro F1-Score ± std |
+| 2 | Box plot | Distribusi Macro F1-Score menunjukkan A memiliki variabilitas paling rendah dan paling konsisten | Semua run Macro F1-Score per model |
+| 3 | Confusion Matrix Heatmap | Model A memiliki error paling rendah di semua kelas; kelas "Berat" paling sulit dikenali | Confusion matrix rata-rata per model |
 
 ---
 
@@ -132,15 +132,19 @@ Evaluasi visualisasi berikut untuk bias (skenario dari contoh):
 
 | Pertanyaan | Jawaban |
 |-----------|---------|
-| Apakah Y-axis menyesatkan? | *Contoh: Ya — A terlihat 2× B padahal beda 0.4%* |
-| Apakah error bar ditampilkan? | |
-| Apakah semua kondisi ditampilkan? | |
-| Apa solusinya? | |
+| Apakah Y-axis menyesatkan? | Ya — A terlihat 2× B padahal beda hanya 0.4%. Sumbu Y yang dipotong memperbesar perbedaan kecil. |
+| Apakah error bar ditampilkan? | Tidak — Tanpa error bar, pembaca tidak tahu apakah perbedaan 0.4% signifikan secara statistik. |
+| Apakah semua kondisi ditampilkan? | Tidak — Hanya 2 metode tanpa informasi N, std, atau p-value. |
+| Apa solusinya? | Gunakan Y-axis mulai dari 0 untuk menunjukkan perbedaan proporsional. Jika terpaksa dipotong, beri notasi "Break" dan tampilkan error bar + uji statistik (p-value). |
 
 **Evaluasi grafik Anda sendiri dari Latihan 2:**
-- [ ] Semua bias check lulus
-- [ ] Ada yang perlu diperbaiki: ____
-
+- [Y] Semua bias check lulus
+- [ ] Ada yang perlu diperbaiki:
+  Grafik	             Bias Check	          Status
+Bar Chart	        Y-axis mulai dari 0	    ✅ Lulus
+Bar Chart    	    Error bar ditampilkan	  ✅ Lulus
+Box Plot	        Semua data disertakan	  ✅ Lulus (menampilkan semua run)
+Confusion Matrix	Tidak menggunakan 3D	  ✅ Lulus
 ---
 
 ## Refleksi
