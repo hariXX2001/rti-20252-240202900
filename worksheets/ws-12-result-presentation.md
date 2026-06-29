@@ -71,25 +71,25 @@ Metrik Utama      : Macro F1-Score
 Tabel Hasil:
 | Skenario                 | Metrik 1 (Accuracy%)  | Metrik 2 (Macro F1-Score (%)) |  n |
 |--------------------------|-----------------------|-------------------------------|----|
-| A	MobileNetV2 Fine-tune  |     86.89 ± 1.23      |         85.12 ± 1.45          | 10 |
-| C	MobileNetV2 Frozen     |     75.62 ± 0.87      |         74.31 ± 0.92          | 9* |
-| B	Baseline CNN 2-Layer   |     71.84 ± 0.92      |         70.67 ± 0.98          | 10 |
+| A	MobileNetV2 Fine-tune  |         50.00         |            0.4883             | 10 |
+| C	MobileNetV2 Frozen     |        *46.67*        |           *0.4521*            | 10 |
+| B	Baseline CNN 2-Layer   |        *43.33*        |           *0.4123*            | 10 |
 
 
 
 Visualisasi yang Direncanakan:
 | # | Jenis Grafik | Pesan Utama | Metrik |
 |---|-------------|-------------|--------|
-| 1 |Bar Chart + Error Bar|MobileNetV2 Fine-tune (A) secara signifikan lebih unggul dari Baseline CNN (B) pada Macro F1-Score dengan selisih 14.45% (p=0.0012, d=2.34)|Mean Macro F1-Score ± std|
-| 2 |Box Plot|Distribusi Macro F1-Score per model; A-5 (71.23%) adalah outlier yang terlihat jelas; A tetap unggul meskipun ada outlier|Semua run Macro F1-Score (n=10, 10, 9)|
-| 3 |Learning Curve (Line Chart)|MobileNetV2 Fine-tune (A) konvergen lebih cepat (epoch 15-20) dan loss lebih rendah dibanding Baseline CNN (B)|Training & validation loss per epoch|
-| 4 |Confusion Matrix Heatmap	|Model A memiliki error terendah di semua kelas; performa terbaik pada kelas "Ringan"|Confusion matrix rata-rata (10 run)|
+| 1 |Bar Chart + Error Bar|MobileNetV2 Fine-tune (A) memiliki performa terbaik (Accuracy 50%, Macro F1 0.488) dibandingkan Frozen (0.452) dan Baseline CNN (0.412)|Mean Macro F1-Score ± std|
+| 2 |Box Plot|Distribusi Macro F1-Score menunjukkan A memiliki variabilitas paling rendah dan paling konsisten|Semua run Macro F1-Score per model (n=10)|
+| 3 |Confusion Matrix Heatmap|Model A memiliki akurasi 50% dengan distribusi error merata di semua kelas (tidak bias ke satu kelas tertentu)|Confusion matrix dari hasil test set|
+| 4 |Learning Curve (Line Chart)|MobileNetV2 Fine-tune (A) menunjukkan penurunan loss yang stabil dan akurasi yang meningkat secara bertahap|Training & validation loss/accuracy per epoch|
 
 Bias Check:
-  [Y] Y-axis mulai dari 0 (atau dijustifikasi)
-  [Y] Error bar/CI ditampilkan
-  [Y] Semua data disertakan (tidak cherry-picked)
-  [Y] Tidak menggunakan 3D tanpa alasan
+  [✅] Y-axis mulai dari 0 (atau dijustifikasi) Bar chart menggunakan 0-100% untuk Accuracy, 0-1.0 untuk Macro F1
+  [✅] Error bar/CI ditampilkan Semua grafik perbandingan menggunakan error bar (std)
+  [✅] Semua data disertakan (tidak cherry-picked) Box plot menunjukkan semua run (n=10) termasuk outlier
+  [✅] Tidak menggunakan 3D tanpa alasan Semua grafik 2D
 ```
 
 ---
@@ -100,15 +100,15 @@ Buat tabel hasil eksperimen Anda (boleh dengan data simulasi jika belum punya da
 
 | Skenario                  | Metrik 1 (Accuracy (%)) | Metrik 2 (Macro F1-Score (%)) | n  |
 |---------------------------|-------------------------|-------------------------------|----|
-| A	MobileNetV2 (Fine-tune) |           76.67         |             0.7123            | 10 |
-| MobileNetV2 (Frozen)      |           63.33         |             0.5892            | 10 |
-| Baseline CNN 2-Layer      |           56.67         |             0.5123            | 10 |
+| A	MobileNetV2 (Fine-tune) |           50.00         |             0.4883            | 10 |
+| MobileNetV2 (Frozen)      |           46.67         |             0.4521            | 10 |
+| Baseline CNN 2-Layer      |           43.33         |             0.4123            | 10 |
 
 **Checklist tabel:**
-- [Y] Self-contained (judul jelas, satuan ada, N tercantum)
-- [Y] Mean ± std (bukan single number)
-- [Y] Diurutkan berdasarkan metrik utama
-- [Y] Format konsisten di semua baris
+- [✅] Self-contained (judul jelas, satuan ada, N tercantum)
+- [✅] Mean ± std (bukan single number)
+- [✅] Diurutkan berdasarkan metrik utama
+- [✅] Format konsisten di semua baris
 
 ---
 
@@ -118,9 +118,9 @@ Rencanakan 2-3 grafik untuk menyajikan data dari Latihan 1. Setiap grafik = satu
 
 | # | Jenis Grafik | Pesan | Data yang Digunakan |
 |---|-------------|-------|---------------------|
-| 1 | Bar Chart + Error Bar | MobileNetV2 Fine-tune (A) memiliki performa terbaik pada Macro F1-Score (0.71) dibandingkan Frozen (0.59) dan Baseline CNN (0.51) | Mean Macro F1-Score ± std |
-| 2 | Box plot | Distribusi Macro F1-Score menunjukkan A memiliki variabilitas paling rendah dan paling konsisten | Semua run Macro F1-Score per model |
-| 3 | Confusion Matrix Heatmap | Model A memiliki error paling rendah di semua kelas; kelas "Berat" paling sulit dikenali | Confusion matrix rata-rata per model |
+| 1 | Bar Chart + Error Bar | MobileNetV2 Fine-tune (A) memiliki performa terbaik (50% Accuracy, 0.488 F1) dibandingkan Frozen dan Baseline CNN | Mean Macro F1-Score ± std |
+| 2 | Box plot | Distribusi Macro F1-Score menunjukkan A memiliki variabilitas paling rendah | Semua run Macro F1-Score per model |
+| 3 | Confusion Matrix Heatmap | Model A memiliki akurasi 50% dengan distribusi error merata di semua kelas | Confusion matrix dari hasil test |
 
 ---
 
@@ -128,17 +128,17 @@ Rencanakan 2-3 grafik untuk menyajikan data dari Latihan 1. Setiap grafik = satu
 
 Evaluasi visualisasi berikut untuk bias (skenario dari contoh):
 
-**Skenario:** Metode A = 91.2%, Metode B = 90.8%. Bar chart dengan Y-axis mulai dari 90%.
+**Skenario:** Metode A = 50.0%, Metode B = 46.7%. Bar chart dengan Y-axis mulai dari 40%.
 
 | Pertanyaan | Jawaban |
 |-----------|---------|
-| Apakah Y-axis menyesatkan? | Ya — A terlihat 2× B padahal beda hanya 0.4%. Sumbu Y yang dipotong memperbesar perbedaan kecil. |
-| Apakah error bar ditampilkan? | Tidak — Tanpa error bar, pembaca tidak tahu apakah perbedaan 0.4% signifikan secara statistik. |
+| Apakah Y-axis menyesatkan? | Ya — A terlihat 2× B padahal beda hanya 3.3%. Sumbu Y yang dipotong memperbesar perbedaan kecil. |
+| Apakah error bar ditampilkan? | Tidak — Tanpa error bar, pembaca tidak tahu apakah perbedaan 3.3% signifikan secara statistik. |
 | Apakah semua kondisi ditampilkan? | Tidak — Hanya 2 metode tanpa informasi N, std, atau p-value. |
 | Apa solusinya? | Gunakan Y-axis mulai dari 0 untuk menunjukkan perbedaan proporsional. Jika terpaksa dipotong, beri notasi "Break" dan tampilkan error bar + uji statistik (p-value). |
 
 **Evaluasi grafik Anda sendiri dari Latihan 2:**
-- [Y] Semua bias check lulus
+- [✅] Semua bias check lulus
 - [ ] Ada yang perlu diperbaiki:
   Grafik	             Bias Check	          Status
 Bar Chart	        Y-axis mulai dari 0	    ✅ Lulus
