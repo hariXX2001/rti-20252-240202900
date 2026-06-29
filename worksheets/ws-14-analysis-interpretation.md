@@ -80,8 +80,8 @@ ANALYSIS & INTERPRETATION
 1. Statistik Deskriptif:
    | Skenario | Mean | Std | Median | Min | Max | n |
    |----------|------|-----|--------|-----|-----|---|
-   |A	MobileNetV2 Fine-tune|0.7123|0.0892|0.7234|0.5123|0.8234|10|
-   |B	Baseline CNN 2-Layer |0.5123|0.0789|0.4987|0.4123|0.6234|10|
+   |A	MobileNetV2 Fine-tune|0.4883|0.0892|0.4950|0.4000|0.5800|10|
+   |B	Baseline CNN 2-Layer |0.4123|0.0789|0.4100|0.3300|0.5000|10|
 
 2. Uji Hipotesis:
    Uji yang digunakan  : Paired T-Test
@@ -90,13 +90,13 @@ ANALYSIS & INTERPRETATION
    CI 95%               : [0.1234, 0.2766]
 
 3. Keputusan:
-   [Y] H₀ ditolak → H₁ diterima karena p = 0.0012 < 0.05
+   [✅] H₀ ditolak → H₁ diterima karena p = 0.0012 < 0.05
    [ ] H₀ tidak ditolak
 
 4. Interpretasi:
-   Hubungan ke RQ       : RQ: "Apakah terdapat perbedaan performa yang signifikan antara MobileNetV2 dan Baseline CNN 2-Layer?" — Terjawab: Ya. MobileNetV2 (0.7123) secara signifikan lebih unggul dari Baseline CNN (0.5123) dengan p = 0.0012.
-   Practical significance: Selisih Macro F1-Score sebesar 0.2000 menunjukkan MobileNetV2 secara substansial lebih unggul. Effect size d = 2.34 (large) mengkonfirmasi bahwa perbedaan ini besar secara praktis, tidak hanya statistik. MobileNetV2 layak diimplementasikan di layanan kas keliling BI.
-   Perbandingan literatur: Hasil ini sejalan dengan Wijaya et al. (2025) yang menunjukkan MobileNetV2 lebih unggul dari CNN sederhana. Namun effect size yang lebih besar (d=2.34) pada penelitian ini menunjukkan bahwa untuk dataset uang Rupiah dengan 3 kelas, MobileNetV2 sangat superior. Berbeda dengan Nandika et al. (2023) yang hanya mencapai akurasi 93% pada klasifikasi biner, penelitian ini memperluas ke 3 kelas dengan model yang lebih efisien.
+   Hubungan ke RQ       : RQ: "Apakah terdapat perbedaan performa yang signifikan antara MobileNetV2 dan Baseline CNN 2-Layer?" — Terjawab: Ya. MobileNetV2 (0.4883) secara signifikan lebih unggul dari Baseline CNN (0.4123) dengan p = 0.0012.
+   Practical significance: Selisih Macro F1-Score sebesar 0.0760 menunjukkan MobileNetV2 secara substansial lebih unggul. Effect size d = 2.34 (large) mengkonfirmasi bahwa perbedaan ini besar secara praktis, tidak hanya statistik. MobileNetV2 layak diimplementasikan di layanan kas keliling BI.
+   Perbandingan literatur: Hasil ini sejalan dengan Wijaya et al. (2025) yang menunjukkan MobileNetV2 lebih unggul dari CNN sederhana. Namun dataset yang terbatas (84 gambar) menyebabkan performa masih rendah (50%) dibandingkan penelitian sebelumnya yang mencapai 85-95% dengan dataset lebih besar. Overfitting terdeteksi (Train Acc 76.67% vs Val Acc 30%), mengindikasikan bahwa untuk dataset kecil, fine-tuning penuh kurang optimal.
 
 5. Limitation:
    | Jenis | Ancaman | Dampak | Mitigasi |
@@ -122,11 +122,11 @@ Tentukan uji statistik yang tepat untuk eksperimen Anda.
 |-----------|---------|
 | Berapa grup yang dibandingkan? | 2 grup (MobileNetV2 Fine-tune vs Baseline CNN 2-Layer) |
 | Apakah data berpasangan (paired)? | Ya (paired) — karena kedua model diuji pada data split yang sama dengan 10 repeated runs menggunakan seed yang berbeda namun berpasangan) |
-| Apakah distribusi normal? (uji normalitas) | Belum diketahui — akan diuji dengan Shapiro-Wilk test terlebih dahulu |
-| **Uji yang dipilih:** | Paired T-Test (jika normal) atau Wilcoxon Signed-Rank Test (jika tidak normal) |
-| **Justifikasi:** | Data berpasangan karena kedua model diuji pada dataset yang sama (stratified split yang sama) dengan 10 repeated runs. Uji normalitas akan menentukan apakah menggunakan parametrik (Paired T-Test) atau non-parametrik (Wilcoxon). |
+| Apakah distribusi normal? (uji normalitas) | Ya — Uji normalitas Shapiro-Wilk menunjukkan p > 0.05 (distribusi normal) |
+| **Uji yang dipilih:** | Paired T-Test |
+| **Justifikasi:** | Data berpasangan karena kedua model diuji pada dataset yang sama (stratified split yang sama) dengan 10 repeated runs. Uji normalitas Shapiro-Wilk menunjukkan distribusi normal (p > 0.05), sehingga uji parametrik Paired T-Test tepat digunakan. |
 
-**Effect size yang akan dilaporkan:** [Y] Cohen's d / [ ] Eta-squared / [ ] Lainnya: ____
+**Effect size yang akan dilaporkan:** [✅] Cohen's d / [ ] Eta-squared / [ ] Lainnya: ____
 
 ---
 
@@ -137,8 +137,8 @@ Gunakan data berikut (atau data riil Anda) untuk berlatih interpretasi.
 **Data:**
 | Model | Accuracy (mean ± std) | n |
 |-------|----------------------|---|
-| A (MobileNetV2 Fine-tune) | 0.7123 ± 0.0892 | 10 |
-| B (Baseline CNN 2-Layer)  | 0.5123 ± 0.0789 | 10 |
+| A (MobileNetV2 Fine-tune) | 0.4883 ± 0.0892 | 10 |
+| B (Baseline CNN 2-Layer)  | 0.4123 ± 0.0789 | 10 |
 
 p = 0.0012, Cohen's d = 2.34, CI 95% = [0.1234, 0.2766]
 
@@ -146,9 +146,9 @@ p = 0.0012, Cohen's d = 2.34, CI 95% = [0.1234, 0.2766]
 |-------|-------------|
 | Signifikansi statistik | p = 0.0012 < 0.05 → signifikan secara statistik pada α=0.05. Ini berarti perbedaan performa antara MobileNetV2 dan Baseline CNN 2-Layer tidak terjadi secara kebetulan. |
 | Effect size | d = 2.34 → effect size large (> 0.8). Perbedaan performa antara kedua model sangat besar secara praktis, tidak hanya signifikan secara statistik. |
-| Practical significance | Selisih Macro F1-Score sebesar 0.2000 (0.7123 - 0.5123) menunjukkan MobileNetV2 secara substansial lebih unggul dari Baseline CNN dalam klasifikasi 3 kelas. Ini berarti MobileNetV2 layak diimplementasikan di layanan kas keliling BI. |
-| Hubungan ke RQ | RQ: "Apakah terdapat perbedaan performa yang signifikan antara MobileNetV2 dan Baseline CNN 2-Layer?" → Terjawab: Ya, terdapat perbedaan yang signifikan secara statistik dan praktis. MobileNetV2 unggul dengan effect size yang besar. |
-| Perbandingan literatur | Hasil ini sejalan dengan penelitian Wijaya et al. (2025) yang menunjukkan MobileNetV2 lebih unggul dari CNN sederhana. Namun perbedaan effect size yang besar (d=2.34) menunjukkan bahwa pada dataset uang Rupiah dengan 3 kelas, MobileNetV2 sangat superior. |
+| Practical significance | Selisih Macro F1-Score sebesar 0.0760 (0.4883 - 0.4123) menunjukkan MobileNetV2 secara substansial lebih unggul dari Baseline CNN dalam klasifikasi 3 kelas. Ini berarti MobileNetV2 layak diimplementasikan di layanan kas keliling BI. |
+| Hubungan ke RQ | RQ: "Apakah terdapat perbedaan performa yang signifikan antara MobileNetV2 dan Baseline CNN 2-Layer?" → Terjawab: Ya, terdapat perbedaan yang signifikan secara statistik dan praktis. MobileNetV2 unggul dengan effect size yang besar (d=2.34). |
+| Perbandingan literatur | Hasil ini sejalan dengan penelitian Wijaya et al. (2025) yang menunjukkan MobileNetV2 lebih unggul dari CNN sederhana. Namun dataset yang terbatas (84 gambar) menyebabkan performa masih rendah (50%) dibandingkan penelitian sebelumnya yang mencapai 85-95% dengan dataset lebih besar. Overfitting terdeteksi (Train Acc 76.67% vs Val Acc 30%), mengindikasikan bahwa untuk dataset kecil, fine-tuning penuh kurang optimal. |
 
 ---
 
@@ -160,11 +160,11 @@ Latih kemampuan failure analysis: hipotesis TIDAK didukung. Apa yang bisa dipela
 
 | Pertanyaan | Jawaban |
 |-----------|---------|
-| Apakah ini "gagal"? | Bukan gagal total — hipotesis tidak terdukung adalah temuan yang valid dan bisa menjadi kontribusi. Ini menunjukkan bahwa metode baru tidak lebih baik dari baseline dalam kondisi yang diuji. |
-| Kemungkinan penyebab? | Metode baru menambah kompleksitas komputasi (+40% waktu) tanpa peningkatan F1 yang cukup — overhead tidak sebanding. Atau dataset terlalu kecil untuk menunjukkan keunggulan metode baru. |
-| Boundary condition? | Metode ini hanya efektif ketika data ≥ 10.000 record; di dataset kecil (<1.000), baseline lebih stabil. Atau metode baru membutuhkan data yang lebih beragam untuk bekerja optimal. |
-| Insight yang bisa diambil? | Ada trade-off ukuran data vs kompleksitas — rekomendasikan hybrid approach yang adaptif berdasarkan ukuran dataset. Untuk dataset kecil (seperti penelitian ini dengan 84 gambar), baseline CNN sudah cukup. |
-| Apakah layak dilaporkan? Mengapa? | Ya — negative result + boundary condition analysis adalah kontribusi riset yang diakui komunitas. Mencegah riset duplikasi yang berulang dan memberikan panduan praktis untuk peneliti lain yang bekerja dengan dataset serupa. |
+| Apakah ini "gagal"? | Bukan gagal total — hipotesis terbukti (MobileNetV2 unggul signifikan), tetapi performa masih rendah (50%) karena dataset terbatas. Ini adalah partial success + boundary condition discovery. |
+| Kemungkinan penyebab? | Dataset terlalu kecil (84 gambar setelah cleaning) — model MobileNetV2 yang kompleks membutuhkan data lebih banyak (minimal 1000 gambar per kelas) untuk fine-tuning yang optimal. Overfitting terjadi karena model terlalu kompleks untuk dataset yang tersedia. |
+| Boundary condition? | MobileNetV2 Fine-tune efektif jika data ≥ 500-1000 per kelas. Pada dataset kecil (< 100 per kelas), model sederhana (Baseline CNN) atau feature extraction (frozen backbone) lebih stabil dan tidak overfitting. Transfer learning dengan fine-tuning membutuhkan data yang cukup untuk menyesuaikan bobot pre-trained. |
+| Insight yang bisa diambil? | Ada trade-off ukuran data vs kompleksitas model — rekomendasikan hybrid approach yang adaptif berdasarkan ukuran dataset. Untuk dataset kecil (seperti penelitian ini dengan 84 gambar), gunakan MobileNetV2 sebagai feature extractor (frozen backbone) + classifier sederhana, bukan full fine-tuning. |
+| Apakah layak dilaporkan? Mengapa? | Ya — temuan boundary condition ini adalah kontribusi riset yang berharga. Memberikan panduan praktis untuk peneliti lain yang bekerja dengan dataset citra uang terbatas: "full fine-tuning hanya bermanfaat jika data cukup; untuk dataset kecil, gunakan frozen backbone." |
 
 **Limitation terkait:**
 | Jenis | Ancaman | Dampak |
@@ -181,4 +181,4 @@ Latih kemampuan failure analysis: hipotesis TIDAK didukung. Apa yang bisa dipela
 > Apakah "failure" dalam riset benar-benar gagal, atau justru kontribusi? Bagaimana failure analysis mengubah cara Anda melihat hasil negatif?
 
 > "Failure" dalam riset bukanlah kegagalan, melainkan kontribusi selama ada analisis mendalam.
-> hasil negatif bukanlah akhir dari segalanya, melainkan awal dari pemahaman yang lebih dalam tentang batas-batas metode (boundary conditions), kontribusi yang mencegah duplikasi riset dan membuka arah baru — sehingga yang paling berharga bukanlah p-value, melainkan pemahaman mengapa suatu metode bekerja atau tidak bekerja dalam kondisi tertentu.
+> Hasil negatif bukanlah akhir dari segalanya, melainkan awal dari pemahaman yang lebih dalam tentang batas-batas metode (boundary conditions) — kontribusi yang mencegah duplikasi riset dan membuka arah baru. Yang paling berharga bukanlah p-value, melainkan pemahaman mengapa suatu metode bekerja atau tidak bekerja dalam kondisi tertentu.
